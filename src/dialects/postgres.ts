@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/v4";
 import { SQLDialect } from "./base";
 
 export class PostgresDialect implements SQLDialect {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { convert } from "./index";
-import z from "zod";
+import * as z from "zod/v4";
 
 describe("convert", () => {
   it("converts simple string schema", () => {

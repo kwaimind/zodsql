@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { convert } from "./index";
-import z from "zod";
+import * as z from "zod/v4";
 import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,

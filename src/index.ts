@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod/v4";
 import {
   SQLDialect,
   PostgresDialect,
@@ -14,19 +14,19 @@ type Return = {
 };
 
 const unwrapSchema = (
-  schema: z.ZodTypeAny,
+  schema: z.ZodType,
   nullable = false,
   optional = false,
-): { schema: z.ZodTypeAny; nullable: boolean; optional: boolean } => {
+): { schema: z.ZodType; nullable: boolean; optional: boolean } => {
   if (schema instanceof z.ZodNullable)
     return unwrapSchema(
-      (schema as z.ZodNullable<z.ZodTypeAny>).unwrap(),
+      (schema as z.ZodNullable<z.ZodType>).unwrap(),
       true,
       optional,
     );
   if (schema instanceof z.ZodOptional)
     return unwrapSchema(
-      (schema as z.ZodOptional<z.ZodTypeAny>).unwrap(),
+      (schema as z.ZodOptional<z.ZodType>).unwrap(),
       nullable,
       true,
     );
@@ -34,7 +34,7 @@ const unwrapSchema = (
 };
 
 const getBaseType = (
-  schema: z.ZodTypeAny,
+  schema: z.ZodType,
   dialect: SQLDialect,
 ): Return["type"] => {
   if (schema instanceof z.ZodString) return dialect.mapString(schema);
@@ -45,7 +45,7 @@ const getBaseType = (
 };
 
 const getType = (
-  schema: z.ZodTypeAny,
+  schema: z.ZodType,
   dialect: SQLDialect,
 ): { type: Return["type"]; nullable: boolean; optional: boolean } => {
   const { schema: unwrapped, nullable, optional } = unwrapSchema(schema);
@@ -56,7 +56,7 @@ const getType = (
  *
  * @see https://github.com/colinhacks/zod/discussions/2134#discussioncomment-5194111
  */
-const zodKeys = <T extends z.ZodTypeAny>(
+const zodKeys = <T extends z.ZodType>(
   schema: T,
   dialect: SQLDialect,
 ): Return[] => {
@@ -73,7 +73,7 @@ const zodKeys = <T extends z.ZodTypeAny>(
     return entries.flatMap(([key, value]) => {
       const nested =
         value instanceof z.ZodType
-          ? zodKeys(value as z.ZodTypeAny, dialect).map((subKey) => ({
+          ? zodKeys(value as z.ZodType, dialect).map((subKey) => ({
               key: `${key}.${subKey.key}`,
               type: subKey.type,
               nullable: subKey.nullable,
@@ -103,8 +103,8 @@ const builtInDialects: {
 
 type DialectName = keyof typeof builtInDialects;
 
-export const convert = (
-  schema: z.ZodObject,
+export const convert = <T extends z.ZodType>(
+  schema: T,
   tableName: string,
   dialect: DialectName = "postgres",
 ): string => {
