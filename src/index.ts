@@ -1,8 +1,14 @@
 import { z } from "zod";
+import {
+  SQLDialect,
+  PostgresDialect,
+  SQLiteDialect,
+  MySQLDialect,
+} from "./dialects";
 
 type Return = {
   key: string;
-  type: "VARCHAR(255)" | "INT" | "BOOLEAN" | "DATETIME";
+  type: string;
   nullable?: boolean;
   optional?: boolean;
 };
@@ -27,39 +33,47 @@ const unwrapSchema = (
   return { schema, nullable, optional };
 };
 
-const getBaseType = (schema: z.ZodTypeAny): Return["type"] => {
-  if (schema instanceof z.ZodString) return "VARCHAR(255)";
-  if (schema instanceof z.ZodNumber) return "INT";
-  if (schema instanceof z.ZodBoolean) return "BOOLEAN";
-  if (schema instanceof z.ZodDate) return "DATETIME";
-  return "VARCHAR(255)";
+const getBaseType = (
+  schema: z.ZodTypeAny,
+  dialect: SQLDialect,
+): Return["type"] => {
+  if (schema instanceof z.ZodString) return dialect.mapString(schema);
+  if (schema instanceof z.ZodNumber) return dialect.mapNumber(schema);
+  if (schema instanceof z.ZodBoolean) return dialect.mapBoolean(schema);
+  if (schema instanceof z.ZodDate) return dialect.mapDate(schema);
+  return dialect.fallbackType();
 };
 
 const getType = (
   schema: z.ZodTypeAny,
+  dialect: SQLDialect,
 ): { type: Return["type"]; nullable: boolean; optional: boolean } => {
   const { schema: unwrapped, nullable, optional } = unwrapSchema(schema);
-  return { type: getBaseType(unwrapped), nullable, optional };
+  return { type: getBaseType(unwrapped, dialect), nullable, optional };
 };
 
 /**
  *
  * @see https://github.com/colinhacks/zod/discussions/2134#discussioncomment-5194111
  */
-const zodKeys = <T extends z.ZodTypeAny>(schema: T): Return[] => {
+const zodKeys = <T extends z.ZodTypeAny>(
+  schema: T,
+  dialect: SQLDialect,
+): Return[] => {
   if (schema === null || schema === undefined) return [];
 
   if (schema instanceof z.ZodNullable || schema instanceof z.ZodOptional)
-    return zodKeys(schema.unwrap() as T);
+    return zodKeys(schema.unwrap() as T, dialect);
 
-  if (schema instanceof z.ZodArray) return zodKeys(schema.element as T);
+  if (schema instanceof z.ZodArray)
+    return zodKeys(schema.element as T, dialect);
 
   if (schema instanceof z.ZodObject) {
     const entries = Object.entries(schema.shape);
     return entries.flatMap(([key, value]) => {
       const nested =
         value instanceof z.ZodType
-          ? zodKeys(value as z.ZodTypeAny).map((subKey) => ({
+          ? zodKeys(value as z.ZodTypeAny, dialect).map((subKey) => ({
               key: `${key}.${subKey.key}`,
               type: subKey.type,
               nullable: subKey.nullable,
@@ -69,7 +83,7 @@ const zodKeys = <T extends z.ZodTypeAny>(schema: T): Return[] => {
 
       if (nested.length) return nested;
 
-      const { type, nullable, optional } = getType(value);
+      const { type, nullable, optional } = getType(value, dialect);
       return { key, type, nullable, optional };
     });
   }
@@ -77,15 +91,32 @@ const zodKeys = <T extends z.ZodTypeAny>(schema: T): Return[] => {
   return [];
 };
 
-export const convert = (schema: z.ZodObject, tableName: string) => {
+const builtInDialects = {
+  postgres: new PostgresDialect(),
+  sqlite: new SQLiteDialect(),
+  mysql: new MySQLDialect(),
+};
+
+type DialectName = keyof typeof builtInDialects;
+
+export const convert = (
+  schema: z.ZodObject,
+  tableName: string,
+  dialect: DialectName = "postgres",
+) => {
   if (!(schema instanceof z.ZodObject)) return "";
 
-  const vals = zodKeys(schema);
+  const dialectInstance = builtInDialects[dialect];
 
-  return `CREATE TABLE ${tableName} (${vals
-    .map(({ key, type, nullable, optional }) => {
-      const nullability = nullable || optional ? "" : " NOT NULL";
-      return `${key} ${type}${nullability}`;
-    })
-    .join(", ")});`;
+  const vals = zodKeys(schema, dialectInstance);
+
+  const columns = vals.map(({ key, type, nullable, optional }) => {
+    const nullability = dialectInstance.formatNullability(
+      nullable ?? true,
+      optional ?? true,
+    );
+    return `${key} ${type}${nullability}`;
+  });
+
+  return dialectInstance.createTableStatement(tableName, columns);
 };
