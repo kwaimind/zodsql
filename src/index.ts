@@ -91,7 +91,11 @@ const zodKeys = <T extends z.ZodTypeAny>(
   return [];
 };
 
-const builtInDialects = {
+const builtInDialects: {
+  postgres: PostgresDialect;
+  sqlite: SQLiteDialect;
+  mysql: MySQLDialect;
+} = {
   postgres: new PostgresDialect(),
   sqlite: new SQLiteDialect(),
   mysql: new MySQLDialect(),
@@ -103,7 +107,7 @@ export const convert = (
   schema: z.ZodObject,
   tableName: string,
   dialect: DialectName = "postgres",
-) => {
+): string => {
   if (!(schema instanceof z.ZodObject)) return "";
 
   const dialectInstance = builtInDialects[dialect];

@@ -1,5 +1,7 @@
 # zodsql
 
+> this is a demo project and 100% not something that is production tested
+
 Generate SQL table schemas from Zod schemas. Converts Zod object definitions into `CREATE TABLE` statements with proper type mappings and nullability constraints.
 
 ## Install
