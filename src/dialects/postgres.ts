@@ -19,7 +19,7 @@ export class PostgresDialect implements SQLDialect {
   }
 
   fallbackType(): string {
-    return "VARCHAR(255)";
+    return "TEXT";
   }
 
   formatNullability(nullable: boolean, optional: boolean): string {
