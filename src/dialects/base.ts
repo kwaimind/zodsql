@@ -4,22 +4,22 @@ export interface SQLDialect {
   /**
    * Map a Zod string schema to SQL type
    */
-  mapString(schema: z.ZodString): string;
+  mapString(): string;
 
   /**
    * Map a Zod number schema to SQL type
    */
-  mapNumber(schema: z.ZodNumber): string;
+  mapNumber(): string;
 
   /**
    * Map a Zod boolean schema to SQL type
    */
-  mapBoolean(schema: z.ZodBoolean): string;
+  mapBoolean(): string;
 
   /**
    * Map a Zod date schema to SQL type
    */
-  mapDate(schema: z.ZodDate): string;
+  mapDate(): string;
 
   /**
    * Fallback type for unmapped schemas

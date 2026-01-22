@@ -2,19 +2,19 @@ import * as z from "zod/v4";
 import { SQLDialect } from "./base";
 
 export class PostgresDialect implements SQLDialect {
-  mapString(_schema: z.ZodString): string {
+  mapString(): string {
     return "VARCHAR(255)";
   }
 
-  mapNumber(_schema: z.ZodNumber): string {
+  mapNumber(): string {
     return "INTEGER";
   }
 
-  mapBoolean(_schema: z.ZodBoolean): string {
+  mapBoolean(): string {
     return "BOOLEAN";
   }
 
-  mapDate(_schema: z.ZodDate): string {
+  mapDate(): string {
     return "TIMESTAMP";
   }
 
