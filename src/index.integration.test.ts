@@ -51,7 +51,7 @@ describe("SQL validation integration tests", () => {
     await expect(client.query(sql)).resolves.toBeTruthy();
   });
 
-  it.skip("validates nested objects with dot notation", async () => {
+  it("validates nested objects with dot notation", async () => {
     const schema = z.object({
       name: z.string(),
       address: z.object({
@@ -87,7 +87,7 @@ describe("SQL validation integration tests", () => {
     await expect(client.query(sql)).resolves.toBeTruthy();
   });
 
-  it.skip("validates complex nested schema", async () => {
+  it("validates complex nested schema", async () => {
     const schema = z.object({
       id: z.number(),
       name: z.string(),

@@ -42,7 +42,7 @@ describe("convert", () => {
     const result = convert(schema, "users");
 
     expect(result).toMatchInlineSnapshot(
-      `"CREATE TABLE users (name VARCHAR(255) NOT NULL, address.street VARCHAR(255) NOT NULL, address.city VARCHAR(255) NOT NULL);"`,
+      `"CREATE TABLE users (name VARCHAR(255) NOT NULL, address_street VARCHAR(255) NOT NULL, address_city VARCHAR(255) NOT NULL);"`,
     );
   });
 
@@ -77,10 +77,10 @@ describe("convert", () => {
 
     const result = convert(schema as any, "users");
 
-    expect(result).toBe("");
+    expect(result).toMatchInlineSnapshot(`""`);
   });
 
-  it.skip("handles deeply nested objects", () => {
+  it("handles deeply nested objects", () => {
     const schema = z.object({
       user: z.object({
         profile: z.object({
@@ -92,12 +92,12 @@ describe("convert", () => {
 
     const result = convert(schema, "data");
 
-    expect(result).toBe(
-      "CREATE TABLE data (user.profile.email varchar(255), user.profile.age number);",
+    expect(result).toMatchInlineSnapshot(
+      `"CREATE TABLE data (user_profile_email VARCHAR(255) NOT NULL, user_profile_age INTEGER NOT NULL);"`,
     );
   });
 
-  it.skip("handles mixed types in complex schema", () => {
+  it("handles mixed types in complex schema", () => {
     const schema = z.object({
       id: z.number(),
       name: z.string(),
@@ -111,8 +111,8 @@ describe("convert", () => {
 
     const result = convert(schema, "users");
 
-    expect(result).toBe(
-      "CREATE TABLE users (id number, name varchar(255), isActive boolean, lastLogin date, settings.theme varchar(255), settings.notifications boolean);",
+    expect(result).toMatchInlineSnapshot(
+      `"CREATE TABLE users (id INTEGER NOT NULL, name VARCHAR(255) NOT NULL, isActive BOOLEAN NOT NULL, lastLogin TIMESTAMP NOT NULL, settings_theme VARCHAR(255) NOT NULL, settings_notifications BOOLEAN NOT NULL);"`,
     );
   });
 

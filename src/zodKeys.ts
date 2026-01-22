@@ -35,7 +35,7 @@ export const zodKeys = <T extends z.ZodType>(
       // Handle nested objects
       if (unwrapped instanceof z.ZodObject) {
         const nested = zodKeys(value as z.ZodType, dialect).map((subKey) => ({
-          key: `${key}.${subKey.key}`,
+          key: `${key}_${subKey.key}`,
           type: subKey.type,
           nullable: subKey.nullable,
           optional: subKey.optional,

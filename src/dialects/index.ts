@@ -13,3 +13,5 @@ export const dialects: {
 };
 
 export type DialectName = keyof typeof dialects;
+
+export { SQLDialect } from "./base";

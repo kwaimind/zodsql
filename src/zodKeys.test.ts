@@ -13,10 +13,22 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: false, optional: false },
-        { key: "age", type: "INTEGER", nullable: false, optional: false },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+          {
+            "key": "age",
+            "nullable": false,
+            "optional": false,
+            "type": "INTEGER",
+          },
+        ]
+      `);
     });
 
     it("extracts keys with all primitive types", () => {
@@ -29,17 +41,34 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: false, optional: false },
-        { key: "age", type: "INTEGER", nullable: false, optional: false },
-        { key: "active", type: "BOOLEAN", nullable: false, optional: false },
-        {
-          key: "createdAt",
-          type: "TIMESTAMP",
-          nullable: false,
-          optional: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+          {
+            "key": "age",
+            "nullable": false,
+            "optional": false,
+            "type": "INTEGER",
+          },
+          {
+            "key": "active",
+            "nullable": false,
+            "optional": false,
+            "type": "BOOLEAN",
+          },
+          {
+            "key": "createdAt",
+            "nullable": false,
+            "optional": false,
+            "type": "TIMESTAMP",
+          },
+        ]
+      `);
     });
   });
 
@@ -51,9 +80,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: true, optional: false },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": true,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
 
     it("handles optional fields", () => {
@@ -63,9 +99,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: false, optional: true },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": false,
+            "optional": true,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
 
     it("handles nullable optional fields", () => {
@@ -75,9 +118,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: true, optional: true },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": true,
+            "optional": true,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
   });
 
@@ -93,21 +143,28 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        { key: "name", type: "VARCHAR(255)", nullable: false, optional: false },
-        {
-          key: "address.street",
-          type: "VARCHAR(255)",
-          nullable: false,
-          optional: false,
-        },
-        {
-          key: "address.city",
-          type: "VARCHAR(255)",
-          nullable: false,
-          optional: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+          {
+            "key": "address_street",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+          {
+            "key": "address_city",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
 
     it("flattens deeply nested objects", () => {
@@ -122,20 +179,22 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        {
-          key: "user.profile.email",
-          type: "VARCHAR(255)",
-          nullable: false,
-          optional: false,
-        },
-        {
-          key: "user.profile.age",
-          type: "INTEGER",
-          nullable: false,
-          optional: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "user_profile_email",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+          {
+            "key": "user_profile_age",
+            "nullable": false,
+            "optional": false,
+            "type": "INTEGER",
+          },
+        ]
+      `);
     });
 
     it("handles nullable nested objects", () => {
@@ -149,14 +208,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        {
-          key: "address.street",
-          type: "VARCHAR(255)",
-          nullable: false,
-          optional: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "address_street",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
 
     it("handles optional nested objects", () => {
@@ -170,14 +231,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([
-        {
-          key: "address.street",
-          type: "VARCHAR(255)",
-          nullable: false,
-          optional: false,
-        },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "address_street",
+            "nullable": false,
+            "optional": false,
+            "type": "VARCHAR(255)",
+          },
+        ]
+      `);
     });
   });
 
@@ -189,7 +252,7 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
 
     it("handles nested arrays", () => {
@@ -203,7 +266,7 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
   });
 
@@ -211,25 +274,25 @@ describe("zodKeys", () => {
     it("returns empty array for null schema", () => {
       const result = zodKeys(null as any, dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
 
     it("returns empty array for undefined schema", () => {
       const result = zodKeys(undefined as any, dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
 
     it("returns empty array for non-object schema", () => {
       const result = zodKeys(z.string(), dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
 
     it("returns empty array for array schema", () => {
       const result = zodKeys(z.array(z.string()), dialects.postgres);
 
-      expect(result).toEqual([]);
+      expect(result).toMatchInlineSnapshot(`[]`);
     });
   });
 
@@ -241,9 +304,16 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.mysql);
 
-      expect(result).toEqual([
-        { key: "active", type: "TINYINT(1)", nullable: false, optional: false },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "active",
+            "nullable": false,
+            "optional": false,
+            "type": "TINYINT(1)",
+          },
+        ]
+      `);
     });
 
     it("uses sqlite types", () => {
@@ -254,10 +324,22 @@ describe("zodKeys", () => {
 
       const result = zodKeys(schema, dialects.sqlite);
 
-      expect(result).toEqual([
-        { key: "name", type: "TEXT", nullable: false, optional: false },
-        { key: "active", type: "INTEGER", nullable: false, optional: false },
-      ]);
+      expect(result).toMatchInlineSnapshot(`
+        [
+          {
+            "key": "name",
+            "nullable": false,
+            "optional": false,
+            "type": "TEXT",
+          },
+          {
+            "key": "active",
+            "nullable": false,
+            "optional": false,
+            "type": "INTEGER",
+          },
+        ]
+      `);
     });
   });
 });
