@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { unwrapSchema } from "./unwrapSchema";
-import * as z from "zod/v4";
+import { describe, expect, it } from 'vitest';
+import * as z from 'zod/v4';
+import { unwrapSchema } from './unwrapSchema';
 
-describe("unwrapSchema", () => {
-  it("returns base schema without wrapping", () => {
+describe('unwrapSchema', () => {
+  it('returns base schema without wrapping', () => {
     const schema = z.string();
     const result = unwrapSchema(schema);
 
@@ -12,7 +12,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(false);
   });
 
-  it("unwraps nullable schema", () => {
+  it('unwraps nullable schema', () => {
     const baseSchema = z.string();
     const schema = baseSchema.nullable();
     const result = unwrapSchema(schema);
@@ -22,7 +22,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(false);
   });
 
-  it("unwraps optional schema", () => {
+  it('unwraps optional schema', () => {
     const baseSchema = z.string();
     const schema = baseSchema.optional();
     const result = unwrapSchema(schema);
@@ -32,7 +32,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(true);
   });
 
-  it("unwraps nullable optional schema", () => {
+  it('unwraps nullable optional schema', () => {
     const baseSchema = z.string();
     const schema = baseSchema.nullable().optional();
     const result = unwrapSchema(schema);
@@ -42,7 +42,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(true);
   });
 
-  it("unwraps optional nullable schema", () => {
+  it('unwraps optional nullable schema', () => {
     const baseSchema = z.string();
     const schema = baseSchema.optional().nullable();
     const result = unwrapSchema(schema);
@@ -52,7 +52,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(true);
   });
 
-  it("unwraps multiple layers of nullable", () => {
+  it('unwraps multiple layers of nullable', () => {
     const baseSchema = z.string();
     const schema = baseSchema.nullable().nullable();
     const result = unwrapSchema(schema);
@@ -62,7 +62,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(false);
   });
 
-  it("unwraps multiple layers of optional", () => {
+  it('unwraps multiple layers of optional', () => {
     const baseSchema = z.string();
     const schema = baseSchema.optional().optional();
     const result = unwrapSchema(schema);
@@ -72,7 +72,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(true);
   });
 
-  it("handles complex schemas", () => {
+  it('handles complex schemas', () => {
     const baseSchema = z.object({ name: z.string() });
     const schema = baseSchema.nullable().optional();
     const result = unwrapSchema(schema);
@@ -82,7 +82,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(true);
   });
 
-  it("handles number schema", () => {
+  it('handles number schema', () => {
     const schema = z.number().nullable();
     const result = unwrapSchema(schema);
 
@@ -91,7 +91,7 @@ describe("unwrapSchema", () => {
     expect(result.optional).toBe(false);
   });
 
-  it("handles boolean schema", () => {
+  it('handles boolean schema', () => {
     const schema = z.boolean().optional();
     const result = unwrapSchema(schema);
 

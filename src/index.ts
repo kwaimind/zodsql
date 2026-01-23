@@ -1,13 +1,13 @@
-import * as z from "zod/v4";
-import { dialects, DialectName } from "./dialects";
-import { zodKeys } from "./zodKeys";
+import * as z from 'zod/v4';
+import { type DialectName, dialects } from './dialects';
+import { zodKeys } from './zodKeys';
 
 export const convert = <T extends z.ZodType>(
   schema: T,
   tableName: string,
-  dialect: DialectName = "postgres",
+  dialect: DialectName = 'postgres',
 ): string => {
-  if (!(schema instanceof z.ZodObject)) return "";
+  if (!(schema instanceof z.ZodObject)) return '';
 
   const dialectInstance = dialects[dialect];
 

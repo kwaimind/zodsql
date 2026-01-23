@@ -1,6 +1,6 @@
-import { MySQLDialect } from "./mysql";
-import { PostgresDialect } from "./postgres";
-import { SQLiteDialect } from "./sqlite";
+import { MySQLDialect } from './mysql';
+import { PostgresDialect } from './postgres';
+import { SQLiteDialect } from './sqlite';
 
 export const dialects: {
   postgres: PostgresDialect;
@@ -14,4 +14,4 @@ export const dialects: {
 
 export type DialectName = keyof typeof dialects;
 
-export { SQLDialect } from "./base";
+export { SQLDialect } from './base';

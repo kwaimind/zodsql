@@ -1,7 +1,7 @@
-import * as z from "zod/v4";
-import { SQLDialect } from "./dialects";
-import { Return } from "./types";
-import { getType } from "./getType";
+import * as z from 'zod/v4';
+import type { SQLDialect } from './dialects';
+import { getType } from './getType';
+import type { Return } from './types';
 
 /**
  *
