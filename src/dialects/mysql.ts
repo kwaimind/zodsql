@@ -18,6 +18,10 @@ export class MySQLDialect implements SQLDialect {
     return "DATETIME";
   }
 
+  mapBigInt(): string {
+    return "BIGINT";
+  }
+
   fallbackType(): string {
     return "TEXT";
   }

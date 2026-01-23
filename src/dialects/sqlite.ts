@@ -18,6 +18,10 @@ export class SQLiteDialect implements SQLDialect {
     return "TEXT";
   }
 
+  mapBigInt(): string {
+    return "INTEGER";
+  }
+
   fallbackType(): string {
     return "TEXT";
   }

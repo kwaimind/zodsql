@@ -10,5 +10,6 @@ export const getBaseType = (
   if (schema instanceof z.ZodNumber) return dialect.mapNumber();
   if (schema instanceof z.ZodBoolean) return dialect.mapBoolean();
   if (schema instanceof z.ZodDate) return dialect.mapDate();
+  if (schema instanceof z.ZodBigInt) return dialect.mapBigInt();
   return dialect.fallbackType();
 };

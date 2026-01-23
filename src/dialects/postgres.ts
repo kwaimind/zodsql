@@ -18,6 +18,10 @@ export class PostgresDialect implements SQLDialect {
     return "TIMESTAMP";
   }
 
+  mapBigInt(): string {
+    return "BIGINT";
+  }
+
   fallbackType(): string {
     return "TEXT";
   }
